@@ -10,10 +10,10 @@ const getBooks = () => new Promise((resolve, reject) => {
     // .then((response) => resolve(Object.values(response.data)))
     // .catch((error) => reject(error));
     .then((response) => {
-      if (response.data) {
-        resolve(Object.values(response.data));
+      if (response.data === null) {
+        resolve(null);
       } else {
-        resolve([]);
+        resolve(Object.values(response.data));
       }
     }).catch((error) => reject(error));
 });
@@ -47,10 +47,11 @@ const createBook = (bookObj) => new Promise((resolve, reject) => {
 });
 
 // TODO: UPDATE BOOK
-const updateBook = (bookObj) => new Promise((resolve, reject) => {
-  axios.patch(`${dbUrl}/books/${bookObj.firebaseKey}.json`, bookObj)
-    .then(() => getBooks().then(resolve))
-    .catch(reject);
+const updateBook = (firebaseKey, bookObj) => new Promise((resolve, reject) => {
+  axios.patch(`${dbUrl}/books/${firebaseKey}.json`, bookObj)
+    .then(() => {
+      getBooks().then(resolve);
+    }).catch(reject);
 });
 
 // TODO: FILTER BOOKS ON SALE

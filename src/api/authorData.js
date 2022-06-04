@@ -18,7 +18,7 @@ const getAuthors = () => new Promise((resolve, reject) => {
 
 // FIXME: CREATE AUTHOR
 const createAuthor = (authorObj) => new Promise((resolve, reject) => {
-  axios.post(`${dbUrl}/author.json`, authorObj)
+  axios.post(`${dbUrl}/authors.json`, authorObj)
     .then((response) => {
       console.warn(response.data.name);
       const payload = { firebaseKey: response.data.name };
@@ -33,6 +33,13 @@ const createAuthor = (authorObj) => new Promise((resolve, reject) => {
 const getSingleAuthor = (firebaseKey) => new Promise((resolve, reject) => {
   axios.get(`${dbUrl}/authors/${firebaseKey}.json`)
     .then((response) => resolve(response.data))
+    .catch((error) => reject(error));
+});
+
+// GET FAVORITE AUTHORS
+const favoriteAuthors = () => new Promise((resolve, reject) => {
+  axios.patch(`${dbUrl}/authors.json?orderBy="favorite"&equalTo=true`)
+    .then((response) => resolve(Object.values(response.data)))
     .catch((error) => reject(error));
 });
 
@@ -66,4 +73,5 @@ export {
   deleteSingleAuthor,
   updateAuthor,
   getAuthorBooks,
+  favoriteAuthors
 };
